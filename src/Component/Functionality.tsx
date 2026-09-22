@@ -3,36 +3,105 @@ import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import ButtonPropsCenter from "./ButtonPropsCenter";
 
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function Functionality() {
   const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [stackName, setStackName] = useState<Technology[]>([]);
 
- // ADD
-  const handleAddStack = (technology: Technology) => {
-    setStackName((lastStack) => {
-      const existsData = lastStack.some(
-        (item) => item.id === technology.id
-      );
+  // ADD
+ const handleAddStack = (technology: Technology) => {
+  const existsData = stackName.some(
+    (item) => item.id === technology.id
+  );
 
-      if (existsData) {
-        return lastStack;
+  if (existsData) {
+    toast.warning(
+      `${technology.name} is already in your stack!`,
+      {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+        transition: Bounce,
       }
-
-      return [...lastStack, technology];
-    });
-  };
-
-  // REMOVE
-  const handleRemoveStack = (id: string) => {
-    setStackName((lastStack) =>
-      lastStack.filter(
-        (technology) => technology.id !== id
-      )
     );
-  };
 
+    return;
+  }
+
+  setStackName((lastStack) => [
+    ...lastStack,
+    technology,
+  ]);
+
+  toast.success(
+    `${technology.name} added to your stack!`,
+    {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+      transition: Bounce,
+    }
+  );
+};
+
+
+const handleRemoveStack = (id: string) => {
+  const technologyToRemove = stackName.find(
+    (technology) => technology.id === id
+  );
+
+  if (!technologyToRemove) {
+    return;
+  }
+
+  setStackName((lastStack) =>
+    lastStack.filter(
+      (technology) => technology.id !== id
+    )
+  );
+
+  toast.error(
+    `${technologyToRemove.name} removed from your stack!`,
+    {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+      transition: Bounce,
+    }
+  );
+};
+
+
+  const handleRemoveAll = () => {
+  setStackName([]);
+  toast.error("All technologies removed from your stack!", {
+    position: "bottom-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,
+  });
+ 
+};
 
   useEffect(() => {
     fetch("/data.json")
@@ -43,7 +112,10 @@ function Functionality() {
   }, []);
 
   return (
+
+  
     <div className=" pl-10 pr-5 mt-15 mb-10">
+  <ToastContainer/>
       <div className="mb-10">
         <h1 className="text-2xl text-black font-bold mb-2">
           Explore the{" "}
@@ -65,11 +137,14 @@ function Functionality() {
         {/* Parent-1 */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {technologies.map((technology) => (
-            <div
-              key={technology.id}
-              className="card w-76 bg-base-100 shadow-sm"
-            >
+          {technologies.map((technology) => {
+            const isAdded = stackName.some((item) => item.id === technology.id);
+
+            return (
+              <div
+                key={technology.id}
+                className="card w-76 bg-base-100 shadow-sm"
+              >
               <div className="card-body">
                 <div className="flex items-center justify-between">
                   <img
@@ -99,52 +174,51 @@ function Functionality() {
                   </li>
                 </ul>
 
+                {/* BUTTTON  */}
+
                 <div className="mt-6">
-                  <button className="btn btn-primary btn-block bg-black rounded-xl" 
-                  onClick={()=>handleAddStack(technology)}>
-                    Add to Stack
-                  </button>
+<button
+  className={`btn btn-block rounded-xl ${
+    isAdded
+      ? "bg-gray-300 text-black cursor-not-allowed"
+      : "bg-black text-white"
+  }`}
+  onClick={() => handleAddStack(technology)}
+>
+  {isAdded ? "✓ Added to Stack" : "Add to Stack"}
+</button>
                 </div>
               </div>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* RIGHT SIDE  */}
 
-         <div className="card  bg-base-100 shadow-sm p-13 mb-319 h-fit ">
-
-          <h1 className="font-bold text-xl">
-            Your Stack
-          </h1>
+        <div className="card  bg-base-100 shadow-sm p-13 mb-218 h-fit ">
+          <h1 className="font-bold text-xl">Your Stack</h1>
 
           <p className="text-[#64748B]">
             {stackName.length === 0
               ? "No technologies selected yet."
               : `${stackName.length} technology${
-                stackName.length > 1 ? "ies" : ""
+                  stackName.length > 1 ? "ies" : ""
                 } selected.`}
           </p>
 
-
-       {/* Empty  */}
+          {/* Empty  */}
 
           {stackName.length === 0 ? (
-
             <div className="mt-10 text-center">
-
               <p className="border border-[#E2E8F0] border-dashed rounded-xl p-6 text-[#64748B]">
                 Your Stack is Empty
               </p>
-
             </div>
-
           ) : (
+            // Selected
 
-        // Selected 
-
-            <div className="mt-2 gap-2">
-
+            <div className="mt-2  gap-2">
               {stackName.map((technology) => (
                 <ButtonPropsCenter
                   key={technology.id}
@@ -152,18 +226,25 @@ function Functionality() {
                   removeBtn={handleRemoveStack}
                 />
               ))}
-
             </div>
-
           )}
 
+
+<div>
+  {stackName.length > 0 && (
+  <button
+    onClick={handleRemoveAll}
+    className="btn btn-outline btn-error w-full mt-6 rounded-xl"
+  >
+    Remove All
+  </button>
+)}
+</div>
+
         </div>
-
       </div>
-
     </div>
   );
 }
-
 
 export default Functionality;

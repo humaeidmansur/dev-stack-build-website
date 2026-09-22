@@ -59,16 +59,7 @@
     "difficulty": "Intermediate",
     "badge": "Top SQL"
   },
-  {
-    "id": "redis",
-    "name": "Redis",
-    "category": "Database",
-    "description": "An in-memory data structure store used as a high-speed database, cache, and message broker.",
-    "icon": "https://icon.icepanel.io/Technology/svg/Redis.svg",
-    "rating": 4.8,
-    "difficulty": "Intermediate",
-    "badge": "Cache"
-  },
+
   {
     "id": "javascript",
     "name": "JavaScript",
@@ -99,16 +90,7 @@
     "difficulty": "Intermediate",
     "badge": "Robust"
   },
-  {
-    "id": "tailwindcss",
-    "name": "Tailwind CSS",
-    "category": "Styling",
-    "description": "A utility-first CSS framework packed with classes that can be composed to build custom UI.",
-    "icon": "https://icon.icepanel.io/Technology/svg/Tailwind-CSS.svg",
-    "rating": 4.9,
-    "difficulty": "Beginner-Friendly",
-    "badge": "Modern"
-  },
+
   {
     "id": "docker",
     "name": "Docker",
@@ -129,16 +111,7 @@
     "difficulty": "Beginner-Friendly",
     "badge": "Popular"
   },
-  {
-    "id": "git",
-    "name": "Git",
-    "category": "DevOps",
-    "description": "A distributed version control system for tracking code changes and collaborating on software projects.",
-    "icon": "https://icon.icepanel.io/Technology/svg/Git.svg",
-    "rating": 4.9,
-    "difficulty": "Beginner-Friendly",
-    "badge": "Essential"
-  },
+
   {
     "id": "mongodb",
     "name": "MongoDB",
